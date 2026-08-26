@@ -1,0 +1,27 @@
+site:
+  title: RHOAI Gen AI Studio Playground
+  start_page: playground-create::index.adoc
+  url: https://red-hat-ai-dev.github.io/p-zero-lessons/playground-create
+
+content:
+  sources:
+    - url: .
+      start_path: content
+      branches: HEAD
+
+ui:
+  bundle:
+    url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/summit-2026/ui-bundle.zip
+    snapshot: true
+  supplemental_files: ./content/supplemental-ui
+
+asciidoc:
+  attributes:
+    showroom-collection-version: v1.5.2
+
+antora:
+  extensions:
+    - require: ./content/lib/inject-buttons.js
+
+output:
+  dir: ./www

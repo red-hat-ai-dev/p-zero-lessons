@@ -1,0 +1,92 @@
+= Module 3: Chat with a Model and Read Inference Metrics
+:navtitle: 3. Chat & Metrics
+
+⏱ *Estimated time: 4 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Send a message to the model and observe streaming token output
+* Read per-response inference metrics: response time, token count, and TTFT
+* Send a follow-up message and confirm the model maintains conversation context
+
+== Exercise 1: Send your first message
+
+. Click in the *Send a message...* input at the bottom of the chat panel.
+
+. Type the following message and press *Enter* (or click the send arrow):
++
+[source,text,role="execute"]
+----
+hi there
+----
+
+. Watch the model stream its response token-by-token in real time.
+
+=== Verify
+
+✔ The model replies (e.g., "Hi there! How can I help you today?") and the response
+appears progressively, not all at once.
+
+image::10-chat-first-response.png[First chat exchange — user sent "hi there", model replied with greeting and Show metrics link,link=self,window=blank,width=700]
+
+== Exercise 2: Read the inference metrics
+
+. Below (or above) the model response, look for a *Show metrics* link or metrics chips.
+  Click it to expand the per-response metrics.
+
+. Identify the three values:
++
+[cols="1,2,2",options="header"]
+|===
+| Metric | Label | What it means
+| Response time | `966ms` (example) | Total time from send to complete response
+| Token count | `T: 4039` (example) | Total tokens in the model's context window at this turn
+| Time to first token | `TTFT: 751ms` (example) | How long until the *first* token appeared in the stream
+|===
+
++
+NOTE: Your numbers will differ. On a shared GPU cluster, TTFT is typically 500ms–2s.
+A high TTFT is normal — it includes queue time on the inference server.
+
++
+IMPORTANT: TTFT is the most user-relevant latency metric for streaming interfaces.
+A low TTFT means users see output quickly even if the full response takes longer.
+
+=== Verify
+
+✔ You can see all three metric values (response time, T, TTFT) for the message you just sent.
+
+image::11-chat-metrics-expanded.png[Inference metrics expanded showing response time in ms, token count T, and TTFT,link=self,window=blank,width=700]
+
+== Exercise 3: Send a follow-up message
+
+The Playground keeps conversation history. Send a follow-up to confirm context is maintained.
+
+. In the chat input, type:
++
+[source,text,role="execute"]
+----
+can you tell me why the sky is blue
+----
+
+. Press *Enter* and wait for the streaming response.
+
+. Notice the model's answer references the Rayleigh scattering phenomenon and the
+  response metrics update for this turn.
+
+=== Verify
+
+✔ The model gives a complete, relevant answer. The chat history shows both turns.
+
+image::12-chat-second-response.png[Two-turn conversation showing both exchanges — "hi there" and sky is blue question with Rayleigh scattering response,link=self,window=blank,width=700]
+
+== Exercise 4: Observe the Compare chat button (optional)
+
+. In the Playground toolbar (top-right), locate the *Compare chat* button.
++
+TIP: This feature lets you run the same prompt against two different models
+side-by-side to compare quality and speed. It is out of scope for this lab but
+worth noting for your own exploration.
+

@@ -14,6 +14,9 @@ content:
     - url: .
       start_path: lessons/nemotron-lightning/content
 
+    - url: .
+      start_path: lessons/playground-create/content
+
 ui:
   bundle:
     url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/summit-2026/ui-bundle.zip

@@ -1,0 +1,110 @@
+= Module 2: Create and Configure a Playground
+:navtitle: 2. Create & Configure
+
+⏱ *Estimated time: 5 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Create a Playground by selecting a model from the available pool
+* Identify and adjust model parameters (temperature, streaming) in the Configure panel
+* Locate the Prompt, Knowledge, and MCP configuration tabs
+
+== Exercise 1: Create a Playground
+
+. From the empty state page, click *Create playground*.
++
+A *Configure playground* modal opens showing all available models.
+
+. Review the model list. Each row shows:
+** *Model name* — the inference endpoint identifier
+** *Status* — a green ✔ indicates the model is deployed and healthy
+** *Type* — `LLM` for language models
+
+. Uncheck the *select all* checkbox at the top to deselect all models.
+
+. Find and check *only* the model named:
++
+[source,text,role="execute",subs="attributes"]
+----
+{model_name}
+----
+
+. Confirm *1 out of N selected* is shown at the top of the list.
+
+. Click *Create*.
++
+A *Creating playground* spinner dialog appears. Wait for it to complete — this takes
+up to 30 seconds.
+
+=== Verify
+
+✔ The Configure panel appears on the left and the chat interface on the right.
+The model selector at the top of the chat should show `{model_name}`.
+
+image::05-configure-playground-modal.png[Configure playground modal showing all 8 available models with green status indicators,link=self,window=blank,width=700]
+
+image::06-playground-active-model-tab.png[Active Playground with Configure Model tab — model, subscription, temperature, streaming,link=self,window=blank,width=700]
+
+== Exercise 2: Explore the Model tab
+
+The *Configure* panel on the left opens to the *Model* tab by default.
+
+. Identify the following controls:
+** *Model* dropdown — the currently selected inference endpoint
+** *Subscription* — the GPU resource pool backing this model
+** *Temperature* slider (range 0–2) — controls response randomness
+** *Streaming* toggle — enables token-by-token output
+
+. Drag the *Temperature* slider to *1.3* and note the numeric value changes.
+
+. Drag the *Temperature* slider back to *0.9* for the rest of the lab.
++
+TIP: A lower temperature (close to 0) makes responses more deterministic. A higher
+temperature (closer to 2) makes them more varied and creative.
+
+=== Verify
+
+✔ The Temperature field shows `0.9`.
+
+== Exercise 3: Explore the Prompt tab
+
+. In the Configure panel, click the *Prompt* tab.
+
+. Read the default system prompt:
++
+----
+You are a helpful AI assistant. You are designed to answer questions in a concise
+and professional manner.
+----
+
+. *(Optional)* Edit the system prompt to add a constraint, such as: `Always answer in fewer than 3 sentences.`
++
+NOTE: Changes to the system prompt take effect immediately on the next message you send.
+
+=== Verify
+
+✔ The Prompt tab shows an editable text area with the system prompt content.
+
+image::07-playground-prompt-tab.png[Configure Prompt tab showing editable system prompt text area,link=self,window=blank,width=700]
+
+== Exercise 4: Explore the Knowledge and MCP tabs (optional)
+
+. Click the *Knowledge* tab.
+** Notice the *RAG* toggle is *Off*.
+** When enabled, you can upload up to 10 files (PDF, CSV, or TXT, max 10 MB each)
+   to ground model responses in your documents.
+
+. Click the *MCP* tab.
+** MCP stands for *Model Context Protocol* — a standard for connecting models to external tools.
+** Any pre-configured MCP servers appear here with their active tool count.
+
+=== Verify
+
+✔ You have visited all four Configure tabs: Model, Prompt, Knowledge, MCP.
+
+image::08-playground-knowledge-tab.png[Configure Knowledge tab with RAG toggle Off and Add files upload area,link=self,window=blank,width=700]
+
+image::09-playground-mcp-tab.png[Configure MCP tab showing GitHub MCP Server with 0 active tools,link=self,window=blank,width=700]
+

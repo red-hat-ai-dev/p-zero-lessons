@@ -14,6 +14,10 @@ Each lesson is a self-contained lab covering a specific model, tool, or workflow
 | Deploy NVIDIA Nemotron-3.5-Lightning-30B on RHOAI with vLLM, use it with OpenCode, and explore its guardrails via chat
 | 90–120 min
 
+| xref:playground-create::index.adoc[RHOAI Gen AI Studio Playground]
+| Navigate the RHOAI dashboard, create a Gen AI Studio playground, chat with a served model, and view the generated code
+| 30–45 min
+
 |===
 
 == Adding a Lesson

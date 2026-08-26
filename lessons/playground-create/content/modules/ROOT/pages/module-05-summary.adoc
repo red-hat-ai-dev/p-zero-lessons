@@ -1,0 +1,38 @@
+= Summary and Next Steps
+:navtitle: Summary & Next Steps
+
+== Well done!
+
+You have completed the *{lab_name}* lightning lab.
+
+== What you accomplished
+
+[cols="1,3",options="header"]
+|===
+| Module | What you did
+| 1 — Navigate | Logged into RHOAI, located Gen AI Studio, and switched to your assigned project
+| 2 — Create & Configure | Created a Playground with a single model; explored Model, Prompt, Knowledge, and MCP tabs
+| 3 — Chat & Metrics | Sent messages, observed streaming responses, and read latency / token / TTFT metrics
+| 4 — View Code & Clean Up | Inspected the auto-generated Llama Stack Python client script; deleted the Playground
+|===
+
+== Key concepts recap
+
+* *Playground* — A project-scoped, browser-based chat UI for deployed LLMs; each OpenShift project can have one active Playground at a time.
+* *Temperature* — Controls response randomness (0 = deterministic, 2 = highly varied).
+* *Streaming* — Responses appear token-by-token, improving perceived latency.
+* *TTFT (Time to First Token)* — The latency until the first output token appears; the most user-relevant latency metric for streaming interfaces.
+* *Llama Stack client* — A Python SDK that mirrors the Playground's API; `client.responses.create()` is the programmatic equivalent of clicking Send.
+
+== Next steps
+
+* *Explore Compare chat* — Run the same prompt against two models side-by-side in the Playground toolbar.
+* *Enable RAG* — Turn on the Knowledge tab, upload a PDF, and ask questions grounded in your document.
+* *Connect an MCP server* — Wire up a GitHub or custom MCP server to give the model access to external tools.
+* *Run the Llama Stack script* — Install `llama-stack-client` in a Jupyter workbench and set `LLAMA_STACK_URL` to your cluster endpoint.
+
+== Resources
+
+* https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed[Red Hat OpenShift AI Documentation]
+* https://llama-stack.readthedocs.io[Llama Stack Documentation]
+* https://github.com/meta-llama/llama-stack-client-python[llama-stack-client Python SDK on GitHub]

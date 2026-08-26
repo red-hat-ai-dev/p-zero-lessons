@@ -1,0 +1,101 @@
+= Module 4: Export the Llama Stack Client Code and Clean Up
+:navtitle: 4. View Code & Clean Up
+
+⏱ *Estimated time: 3 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Find the auto-generated Python Llama Stack client script in the Playground UI
+* Identify the four key elements of the script: import, client instantiation, model name, and `responses.create()` call
+* Delete the Playground and confirm the empty state
+
+== Exercise 1: Open the View Code modal
+
+. In the Playground toolbar (top-right), click *View Code*.
++
+A *Playground configuration* modal opens. The header shows *PYTHON* — indicating the
+generated code is a Python script.
+
+. The script is a *Llama Stack Quickstart Script* that replicates the current
+  Playground configuration programmatically.
+
+=== Verify
+
+✔ The modal is open and shows numbered lines of Python code.
+
+image::13-view-code-modal.png[Playground configuration modal showing Llama Stack Python quickstart script labeled PYTHON,link=self,window=blank,width=700]
+
+== Exercise 2: Read the generated code
+
+Study the four key sections of the script:
+
+[source,python]
+----
+from llama_stack_client import LlamaStackClient  # <1>
+
+client = LlamaStackClient(base_url=LLAMA_STACK_URL)  # <2>
+
+model_name = "maas-vllm-inference-1/qwen38-27b"  # <3>
+system_instructions = """You are a helpful AI assistant..."""
+
+config = {
+    "input": input_text,
+    "model": model_name,
+    "instructions": system_instructions
+}
+response = client.responses.create(**config)  # <4>
+print("agent>", response.output_text)
+----
+<1> *Import* — the `llama_stack_client` Python package provides the SDK
+<2> *Client instantiation* — `LlamaStackClient` connects to the Llama Stack server URL
+<3> *Model name* — matches the model you selected in Module 2 (`{model_name}`)
+<4> *Create call* — `client.responses.create()` is the programmatic equivalent of clicking Send in the chat UI
+
+. Confirm that `model_name` in the script matches your selected model: `{model_name}`.
+
+. Notice `LLAMA_STACK_URL = ""` — this placeholder would be set to the cluster endpoint
+  to run the script outside the browser.
++
+NOTE: Running this script is out of scope for this lab. The key takeaway is that
+every chat interaction you did in the UI has a direct Python API equivalent.
+
+=== Verify
+
+✔ You can identify all four callout elements in the script (import, client, model_name, responses.create).
+
+image::15-delete-dialog-confirmed.png[Delete playground dialog with User Mhepburn Project typed to confirm — Delete button active,link=self,window=blank,width=700]
+
+== Exercise 3: Close the modal and delete the Playground
+
+. Click the *✕* to close the View Code modal.
+
+. In the Playground toolbar, click the three-dot overflow menu *⋮*.
+
+. Click *Delete playground*.
+
+. A confirmation dialog appears: *"Delete playground?"*
++
+IMPORTANT: This action cannot be undone and deletes the Playground for *all users*
+in this project.
+
+. In the text field, type the exact project name to confirm:
++
+[source,text,role="execute",subs="attributes"]
+----
+{learner_project}
+----
++
+TIP: The *Delete* button remains grayed out until you type the exact project name.
+If the button does not become red/active, check your spelling.
+
+. Click *Delete*.
+
+=== Verify
+
+✔ The Playground returns to the *"Create your playground"* empty state. The Playground
+and its chat history have been removed.
+
+image::16-playground-empty-after-delete.png[Playground empty state after deletion — Create your playground CTA returned,link=self,window=blank,width=700]
+

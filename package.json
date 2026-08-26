@@ -1,0 +1,10 @@
+{
+  "name": "p-zero-lessons",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Red Hat AI — P-Zero lessons hub. Builds the whole site from antora-playbook.yml.",
+  "dependencies": {
+    "@antora/cli": "3.1.9",
+    "@antora/site-generator": "3.1.9"
+  }
+}

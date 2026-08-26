@@ -1,0 +1,49 @@
+= {lab_name}
+:navtitle: Welcome
+
+Welcome to the *{lab_name}* lightning lab.
+
+In this 15-minute lab you will create a Playground in Red Hat OpenShift AI (RHOAI),
+chat with a deployed large language model, read inference metrics, and export the
+equivalent Python code using the Llama Stack client SDK.
+
+NOTE: The Playground feature is currently *Tech Preview*. The UI may change in future
+RHOAI releases.
+
+== What you will learn
+
+* How to navigate the RHOAI dashboard to the Gen AI Studio Playground
+* How to create a Playground and select a model from the available pool
+* How to configure model parameters (temperature, system prompt) and explore Knowledge and MCP tabs
+* How to send messages, observe streaming responses, and read per-response inference metrics
+* How to find the auto-generated Llama Stack Python client code in the Playground UI
+
+== Who this is for
+
+* Developers and data scientists who are new to RHOAI
+* Anyone who wants to try an LLM on OpenShift without writing code first
+
+== Prerequisites
+
+* A web browser (Chrome or Firefox recommended)
+* Your lab credentials — these are provided in the panel to the right:
+** *Username*: `{user}`
+** *Password*: `{password}`
+* No terminal or CLI access is needed for this lab
+
+== Estimated time
+
+⏱ *15 minutes*
+
+== Your lab environment
+
+[cols="1,2",options="header"]
+|===
+| Resource | URL / Value
+| RHOAI Dashboard | {rhoai_dashboard_url}
+| Your OpenShift Project | `{learner_project}`
+| Deployed Model | `{model_name}`
+|===
+
+== Let's get started
+

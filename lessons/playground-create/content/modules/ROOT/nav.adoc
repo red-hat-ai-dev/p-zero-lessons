@@ -1,0 +1,6 @@
+* xref:index.adoc[Welcome]
+* xref:module-01-navigate.adoc[1. Navigate to the Playground]
+* xref:module-02-create.adoc[2. Create & Configure a Playground]
+* xref:module-03-chat.adoc[3. Chat with a Model]
+* xref:module-04-viewcode.adoc[4. View Code & Clean Up]
+* xref:module-05-summary.adoc[Summary & Next Steps]

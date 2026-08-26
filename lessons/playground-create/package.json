@@ -1,0 +1,13 @@
+{
+  "name": "zt-playground-create-showroom",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "antora --fetch site.yml",
+    "serve": "npx http-server docs -p 8080"
+  },
+  "devDependencies": {
+    "@antora/cli": "3.1.9",
+    "@antora/site-generator": "3.1.9"
+  }
+}

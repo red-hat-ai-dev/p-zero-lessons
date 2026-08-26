@@ -1,0 +1,79 @@
+= Module 1: Navigate to the Playground
+:navtitle: 1. Navigate to the Playground
+
+⏱ *Estimated time: 3 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Log into the RHOAI dashboard and locate the Projects home page
+* Find Gen AI Studio and the Playground in the left navigation
+* Switch to your assigned OpenShift project using the project selector
+
+== Exercise 1: Log in to RHOAI
+
+. Open your browser and navigate to the RHOAI dashboard:
++
+[source,bash,role="execute",subs="attributes"]
+----
+{rhoai_dashboard_url}
+----
+
+. Log in with your credentials:
+** *Username*: `{user}`
+** *Password*: `{password}`
+
+. After login, confirm you see the *Projects* home page with a list of AI projects.
+
+=== Verify
+
+✔ You should see the RHOAI home page with a *Projects* section and a "Get oriented with learning resources" section below it.
+
+image::01-rhoai-home-projects.png[RHOAI dashboard Projects home page,link=self,window=blank,width=700]
+
+== Exercise 2: Navigate to the Playground
+
+. In the left navigation, locate *Gen AI Studio* and click to expand it.
++
+TIP: If the left nav is collapsed, click the hamburger icon (☰) at the top-left to expand it.
+
+. Click *Playground* under Gen AI Studio.
++
+The Playground loads. It is scoped to the *currently active* OpenShift project, which may not be your assigned project yet.
+
+. Notice the *Project* selector at the top of the page (next to the Playground title).
+
+=== Verify
+
+✔ The browser URL should contain `/gen-ai-studio/playground/`.
+
+image::02-gen-ai-studio-nav.png[Gen AI Studio expanded in left nav showing Playground,link=self,window=blank,width=700]
+
+== Exercise 3: Switch to your assigned project
+
+. Click the *Project* selector dropdown at the top of the Playground page.
+
+. In the search field that appears, type part of your project name:
++
+[source,bash,role="execute",subs="attributes"]
+----
+{learner_project}
+----
+
+. Click *{learner_project}* in the list to select it.
+
+. Confirm the URL in your browser changes to end with `/{learner_project}`.
++
+NOTE: There may be many projects listed (the environment has 150+). The search field
+filters the list — use it rather than scrolling.
+
+=== Verify
+
+✔ You should see the *"Create your playground"* empty state — an illustration with a
+blue *Create playground* button. This means your project has no active Playground yet.
+
+image::03-playground-project-selector.png[Project selector dropdown open showing User Mhepburn Project selected,link=self,window=blank,width=700]
+
+image::04-playground-empty-state.png[Playground empty state — Create your playground CTA,link=self,window=blank,width=700]
+
