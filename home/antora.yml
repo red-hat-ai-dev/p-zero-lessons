@@ -1,0 +1,11 @@
+name: home
+title: "Red Hat AI — Lessons"
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    source-highlighter: highlight.js
+    experimental: true
+    page-pagination: true

@@ -1,11 +1,16 @@
 ---
 site:
-  title: "Red Hat AI — P-Zero Lessons"
+  title: "Red Hat AI — Lessons"
   url: https://red-hat-ai-dev.github.io/p-zero-lessons
-  start_page: nemotron-lightning::index.adoc
+  start_page: home::index.adoc
 
 content:
   sources:
+    # Landing page / hub component
+    - url: .
+      start_path: home
+
+    # Lessons — add a new source entry for each lesson merged into main
     - url: .
       start_path: lessons/nemotron-lightning/content
 
@@ -13,7 +18,7 @@ ui:
   bundle:
     url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/summit-2026/ui-bundle.zip
     snapshot: true
-  supplemental_files: ./lessons/nemotron-lightning/content/supplemental-ui
+  supplemental_files: ./supplemental-ui
 
 asciidoc:
   attributes:
@@ -21,7 +26,7 @@ asciidoc:
 
 antora:
   extensions:
-    - require: ./lessons/nemotron-lightning/content/lib/inject-buttons.js
+    - require: ./lib/inject-buttons.js
 
 output:
   dir: ./www

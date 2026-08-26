@@ -1,0 +1,26 @@
+= Red Hat AI — Lessons
+
+Hands-on workshops for Red Hat OpenShift AI, built with the OODA workshop factory.
+
+Each lesson is a self-contained lab covering a specific model, tool, or workflow. Use the sidebar to browse available lessons.
+
+== Available Lessons
+
+[cols="1,2,1"]
+|===
+| Lesson | Description | Time
+
+| xref:nemotron-lightning::index.adoc[Nemotron Lightning 30B — Day 0]
+| Deploy NVIDIA Nemotron-3.5-Lightning-30B on RHOAI with vLLM, use it with OpenCode, and explore its guardrails via chat
+| 90–120 min
+
+|===
+
+== Adding a Lesson
+
+Each lesson lives under `lessons/<slug>/content/` as an Antora component. To add one:
+
+. Add the lesson content under `lessons/<slug>/`
+. Register it in `antora-playbook.yml` as a new content source
+. Add a row to the table above and an entry in this component's `nav.adoc`
+. Open a PR — the site rebuilds on merge to `main`
