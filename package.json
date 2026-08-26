@@ -1,5 +1,5 @@
 {
-  "name": "p-zero-lessons",
+  "name": "p-zero-touch-lessons",
   "version": "1.0.0",
   "private": true,
   "description": "Red Hat AI — P-Zero lessons hub. Builds the whole site from antora-playbook.yml.",

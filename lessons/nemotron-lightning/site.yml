@@ -1,7 +1,7 @@
 ---
 site:
   title: "Nemotron Lightning 30B — Day 0"
-  url: https://red-hat-ai-dev.github.io/p-zero-lessons/nemotron-lightning
+  url: https://red-hat-ai-dev.github.io/p-zero-touch-lessons/nemotron-lightning
   start_page: modules::index.adoc
 
 content:

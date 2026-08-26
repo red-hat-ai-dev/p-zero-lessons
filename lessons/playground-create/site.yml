@@ -1,7 +1,7 @@
 site:
   title: RHOAI Gen AI Studio Playground
   start_page: playground-create::index.adoc
-  url: https://red-hat-ai-dev.github.io/p-zero-lessons/playground-create
+  url: https://red-hat-ai-dev.github.io/p-zero-touch-lessons/playground-create
 
 content:
   sources:

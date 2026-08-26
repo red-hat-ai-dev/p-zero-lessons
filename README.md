@@ -1,4 +1,4 @@
-# p-zero-lessons
+# p-zero-touch-lessons
 
 Red Hat AI — P-Zero workshop lessons. Each lesson lives under `lessons/<slug>/` as an Antora/AsciiDoc content module. The root `antora-playbook.yml` builds the global docs site.
 

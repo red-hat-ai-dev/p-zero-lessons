@@ -1,7 +1,7 @@
 ---
 site:
   title: "Red Hat AI — Lessons"
-  url: https://red-hat-ai-dev.github.io/p-zero-lessons
+  url: https://red-hat-ai-dev.github.io/p-zero-touch-lessons
   start_page: home::index.adoc
 
 content:
