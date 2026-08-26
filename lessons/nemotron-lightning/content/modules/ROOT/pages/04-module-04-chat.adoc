@@ -1,0 +1,158 @@
+= Module 4: Chat and Guardrails
+:navtitle: Module 4: Chat and Guardrails
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Connect Open WebUI to the RHOAI-hosted Nemotron endpoint
+* Observe the model's visible chain-of-thought reasoning in the chat UI
+* Identify at least three of the five core guardrail areas the model uses
+* Name the four layers through which guardrails integrate with reasoning
+
+== Exercise 1: Connect Open WebUI to your model endpoint
+
+Open WebUI is pre-installed in your workshop environment. Navigate to it in your browser:
+
+**Open WebUI URL:** `https://open-webui.{openshift_cluster_ingress_domain}`
+
+Log in with your workshop credentials (`{user}` / `{password}`).
+
+=== Add your model endpoint
+
+. Click the gear icon → **Admin Panel** → **Connections**
+. Under **OpenAI API**, set:
+  * **API Base URL:** `https://{model_endpoint}`
+  * **API Key:** `none`
+. Click **Save**
+. Return to the home page — your model should appear in the model selector as `{model_name}`
+
+=== Verify
+
+Select the model in the dropdown. The model name should show `Nemotron 3.5 Lightning 30B` or similar.
+
+== Exercise 2: Observe chain-of-thought reasoning
+
+Start a new conversation. Send this message:
+
+----
+Welcome to the world, Nemotron
+----
+
+=== What to observe
+
+After sending, you will see a `Thinking...` or `Thought for less than a second` disclosure above the model's response. Expand it. You should see the model's internal reasoning steps:
+
+. *Analyze User Input* — identifies the greeting context
+. *Identify Key Elements* — Name: Nemotron, Context: introduction
+. *Determine Appropriate Response* — plans tone and content
+. *Refine/Check* — self-validates before generating
+
+The final response introduces the model and offers assistance.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Chain-of-thought reasoning trace observed."
+----
+
+NOTE: This visible reasoning is a deliberate transparency feature of the Nemotron model family. It lets you see how the model plans its response before committing to output.
+
+== Exercise 3: Explore guardrails
+
+Send this follow-up message:
+
+----
+could you talk about the guardrails that you inject into your reasoning?
+----
+
+=== What to observe
+
+The model will explain its built-in safety mechanisms. The response covers:
+
+**Core areas:**
+
+[cols="1,3"]
+|===
+| Area | What it means
+
+| *Safety & Harm Prevention*
+| Refuses requests for violence, self-harm, illegal instructions, sexual content involving minors
+
+| *Privacy*
+| Avoids reproducing PII; discourages users from sharing sensitive data
+
+| *Hallucination Mitigation*
+| Says "I don't know" or flags uncertainty rather than fabricating facts
+
+| *Bias & Fairness*
+| Reduces systematic bias in tone, representation, and stereotyping
+
+| *Instruction Compliance & Boundaries*
+| Does not break its own rules (e.g., won't help with hacking) while remaining open-ended
+|===
+
+**Integration layers:**
+
+. *Training-Time Signals* — RLHF / SFT human reviewers shape safety during fine-tuning
+. *System-Level Prompting & Context* — a system prompt sets the behavioral contract at inference time
+. *Output Filtering & Post-Hoc Checks* — runtime classifiers scan output for policy violations
+. *Dynamic Refusal & Uncertainty Expression* — the model politely refuses or requests clarification when a request is outside scope
+
+**Philosophy:** Useful → Safe → Honest (safety does not override usefulness; all three must coexist)
+
+=== Verify
+
+Without looking back at the table, name three of the five core guardrail areas:
+
+[source,bash,role="execute"]
+----
+echo "Core areas: 1. _______ 2. _______ 3. _______"
+----
+
+== Exercise 4: Follow a suggested prompt
+
+At the bottom of the model's guardrail response, you will see **Follow up** suggestions. Click one — for example:
+
+----
+How do guardrails balance safety with the model's ability to provide helpful and creative answers?
+----
+
+Observe how the model extends the conversation and maintains its structured, cited response style.
+
+=== Ask about companies prioritizing AI safety
+
+Send this message:
+
+----
+That's great! do you know of any companies that are prioritizing AI safety and guardrails?
+----
+
+The model should return a structured, categorized response covering:
+
+* Major AI labs (OpenAI, Anthropic, Google DeepMind, Microsoft)
+* Cloud providers (AWS Bedrock Guardrails, Azure AI Content Safety, Google Cloud Vertex AI)
+* Specialized startups (Guardrails AI / guardrails.py, Modulus, Fiddler/Arize/WhyLabs)
+* NVIDIA's own position (NeMo Guardrails, safety-aware training, red teaming pipelines)
+* Nonprofit/standard-setting bodies (Partnership on AI, AI Safety Institute)
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Multi-turn AI safety conversation complete."
+----
+
+== Module summary
+
+* Open WebUI connects to your RHOAI Nemotron endpoint using the same OpenAI-compatible API as OpenCode
+* The model surfaces visible chain-of-thought reasoning before each response
+* Five core guardrail areas: Safety, Privacy, Hallucination Mitigation, Bias & Fairness, Instruction Compliance
+* Four integration layers: Training-Time Signals, System Prompting, Output Filtering, Dynamic Refusal
+* The model philosophy is Useful → Safe → Honest — safety does not simply censor usefulness
+
+Click **Conclusion** in the navigation to wrap up.

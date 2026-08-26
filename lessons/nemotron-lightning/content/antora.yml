@@ -1,0 +1,24 @@
+name: modules
+title: "Nemotron Lightning 30B — Day 0"
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    source-highlighter: highlight.js
+    experimental: true
+    page-pagination: true
+    showroom-collection-version: v1.5.2
+    lab_name: "Nemotron Lightning 30B — Day 0"
+    guid: abc123
+    user: "user1"
+    password: "%password%"
+    openshift_api_url: "https://api.cluster.example.com:6443"
+    openshift_console_url: "https://console-openshift-console.apps.cluster.example.com"
+    openshift_cluster_ingress_domain: "apps.cluster.example.com"
+    model_endpoint: "https://nemotron.apps.cluster.example.com/v1"
+    model_name: "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4"
+    hf_model_id: "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4"
+    rhoai_dashboard_url: "https://rhods-dashboard-redhat-ods-applications.apps.cluster.example.com"
+    opencode_version: "1.18.16"
