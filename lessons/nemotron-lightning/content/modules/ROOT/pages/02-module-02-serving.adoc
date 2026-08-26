@@ -1,0 +1,182 @@
+= Module 2: Serve with vLLM on RHOAI
+:navtitle: Module 2: Serve with vLLM on RHOAI
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Deploy Nemotron-3.5-Lightning-30B on RHOAI model serving using a vLLM ServingRuntime
+* Configure DSpark speculative decoding, fp8 KV cache, and the FlashInfer Mamba backend
+* Verify the endpoint is healthy with `curl`
+* Run a test inference call and receive a valid response
+
+NOTE: The model has been pre-pulled and cached on the cluster GPU node. You will not need to wait for a download — deployment targets the cached checkpoint.
+
+== Exercise 1: Create the RHOAI model serving project
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc new-project nemotron-serving-{user}
+----
+
+Confirm you are in the correct project:
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc project nemotron-serving-{user}
+----
+
+== Exercise 2: Register the vLLM ServingRuntime
+
+Apply the ServingRuntime that configures vLLM with the required flags:
+
+[source,bash,role="execute",subs="attributes"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: nemotron-vllm
+  namespace: nemotron-serving-{user}
+spec:
+  supportedModelFormats:
+    - name: pytorch
+      version: "1"
+      autoSelect: true
+  containers:
+    - name: kserve-container
+      image: quay.io/opendatahub/vllm:latest
+      command:
+        - python
+        - -m
+        - vllm.entrypoints.openai.api_server
+      args:
+        - "--model=/mnt/models"
+        - "--served-model-name={model_name}"
+        - "--moe-backend=marlin"
+        - "--kv-cache-dtype=fp8"
+        - "--enable-prefix-caching"
+        - "--speculative_config={\"num_speculative_tokens\": 3}"
+        - "--mamba-backend=flashinfer"
+        - "--mamba-cache-mode=align"
+        - "--gpu-memory-utilization=0.91"
+        - "--port=8080"
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+      resources:
+        limits:
+          nvidia.com/gpu: "1"
+EOF
+----
+
+=== Verify
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc get servingruntime nemotron-vllm -n nemotron-serving-{user}
+----
+
+You should see the ServingRuntime in `Ready` state.
+
+== Exercise 3: Deploy the InferenceService
+
+[source,bash,role="execute",subs="attributes"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: nemotron-lightning
+  namespace: nemotron-serving-{user}
+  annotations:
+    serving.kserve.io/deploymentMode: RawDeployment
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: pytorch
+      runtime: nemotron-vllm
+      storageUri: "pvc://nemotron-model-pvc"
+EOF
+----
+
+Wait for the deployment to be ready (the model is pre-cached so this should take under 3 minutes):
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc rollout status deploy/nemotron-lightning-predictor-00001-deployment \
+  -n nemotron-serving-{user} --timeout=5m
+----
+
+== Exercise 4: Verify the endpoint
+
+Get the route to the model endpoint:
+
+[source,bash,role="execute",subs="attributes"]
+----
+export MODEL_ENDPOINT=$(oc get route nemotron-lightning-predictor \
+  -n nemotron-serving-{user} \
+  -o jsonpath='{.spec.host}')
+echo "Endpoint: https://$MODEL_ENDPOINT"
+----
+
+Check the health endpoint:
+
+[source,bash,role="execute"]
+----
+curl -sk -o /dev/null -w '%{http_code}\n' https://$MODEL_ENDPOINT/health
+----
+
+You should receive `200`.
+
+=== Monitor GPU memory
+
+Confirm the model loaded and is using GPU memory:
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc exec -n nemotron-serving-{user} \
+  deploy/nemotron-lightning-predictor-00001-deployment \
+  -- nvidia-smi --query-gpu=name,memory.used,memory.total --format=csv,noheader
+----
+
+You should see the H100 with significant memory in use (~80–85 GB for the NVFP4 checkpoint at 91% utilization).
+
+== Exercise 5: Run a test inference
+
+Send a test chat completion request:
+
+[source,bash,role="execute",subs="attributes"]
+----
+curl -sk https://$MODEL_ENDPOINT/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "{model_name}",
+    "messages": [{"role": "user", "content": "What is Mixture of Experts in one sentence?"}],
+    "max_tokens": 100
+  }' | python3 -m json.tool
+----
+
+=== Verify
+
+The response JSON should contain a `choices[0].message.content` field with a non-empty answer. Note the response — it confirms DSpark speculative decoding is active.
+
+Save your endpoint URL for use in Modules 3 and 4:
+
+[source,bash,role="execute"]
+----
+echo "export MODEL_ENDPOINT=$MODEL_ENDPOINT" >> ~/.bashrc
+----
+
+== Module summary
+
+* You deployed Nemotron-3.5-Lightning-30B on RHOAI using a custom vLLM ServingRuntime
+* Key flags: `--moe-backend marlin`, `--kv-cache-dtype fp8`, `--enable-prefix-caching`, `--mamba-backend flashinfer`, `--gpu-memory-utilization 0.91`
+* The endpoint exposes an OpenAI-compatible API at `/v1/chat/completions`
+* DSpark speculative decoding is active with 3 speculative tokens
+
+Click **Module 3** in the navigation to connect OpenCode to this endpoint.

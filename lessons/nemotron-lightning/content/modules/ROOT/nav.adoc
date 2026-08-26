@@ -1,0 +1,7 @@
+* xref:index.adoc[Welcome]
+* xref:getting-connected.adoc[Getting Connected]
+* xref:01-module-01-intro.adoc[Module 1: Meet Nemotron Lightning 30B]
+* xref:02-module-02-serving.adoc[Module 2: Serve with vLLM on RHOAI]
+* xref:03-module-03-opencode.adoc[Module 3: Agentic Coding with OpenCode]
+* xref:04-module-04-chat.adoc[Module 4: Chat and Guardrails]
+* xref:05-conclusion.adoc[Conclusion]

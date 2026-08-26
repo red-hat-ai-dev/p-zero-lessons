@@ -1,0 +1,134 @@
+= Module 3: Agentic Coding with OpenCode
+:navtitle: Module 3: Agentic Coding with OpenCode
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Configure OpenCode to use your RHOAI-hosted Nemotron endpoint
+* Run a file system query, a web search task, and a multi-step research task with web corroboration
+* Observe token count, latency, and cost readouts in the OpenCode TUI
+* Confirm the local model is being used (cost: $0.00)
+
+== Exercise 1: Configure OpenCode to use your model endpoint
+
+OpenCode stores its model provider configuration in `~/.config/opencode/config.json`. Create or update it to point at your RHOAI endpoint:
+
+[source,bash,role="execute",subs="attributes"]
+----
+mkdir -p ~/.config/opencode
+
+cat <<EOF > ~/.config/opencode/config.json
+{
+  "providers": {
+    "custom": {
+      "name": "Nemotron (WDC)",
+      "apiBase": "https://{model_endpoint}",
+      "apiKey": "none",
+      "models": [
+        {
+          "id": "{model_name}",
+          "name": "Nemotron 3.5 Lightning 30B"
+        }
+      ]
+    }
+  },
+  "model": "custom/{model_name}"
+}
+EOF
+----
+
+=== Verify
+
+Launch OpenCode and confirm the model context line at the bottom of the TUI shows `Nemotron 3.5 Lightning 30B · Nemotron (WDC)`:
+
+[source,bash,role="execute"]
+----
+opencode
+----
+
+You should see the OpenCode TUI with your model listed. Press kbd:[Ctrl+C] to exit for now.
+
+== Exercise 2: File system query
+
+Launch OpenCode and enter the following prompt:
+
+[source,bash,role="execute"]
+----
+opencode
+----
+
+At the OpenCode prompt, type:
+
+----
+please list the number of files in my current directory
+----
+
+=== Verify
+
+* OpenCode calls a file listing tool and returns an accurate count
+* The latency readout appears at the end of the response (e.g., `1.7s`)
+* The context panel shows token usage and `$0.00` cost — confirming the local model is in use
+
+Record the token count and latency here: ______
+
+== Exercise 3: Web search task
+
+In the same OpenCode session, enter:
+
+----
+please search the web for vLLM and summarize the key facts
+----
+
+=== Verify
+
+* OpenCode executes a `WebFetch` tool call to DuckDuckGo
+* The response includes structured information: GitHub stars, license, key features
+* A latency reading appears (typically 2–4s for this task)
+
+NOTE: If the WebFetch tool does not appear, check that web tool use is enabled in your OpenCode config. Add `"tools": ["webfetch"]` to the provider configuration.
+
+== Exercise 4: Multi-step research with web corroboration
+
+This is the headline task from the Day 0 demo. Enter:
+
+----
+what are the benefits of choosing MoE models over dense models, and why would someone pick one? Please answer and then search the web to corroborate your story
+----
+
+=== What to observe
+
+Watch the OpenCode TUI as it:
+
+. Generates an initial answer from its own knowledge (~300ms thinking time)
+. Issues a `WebFetch` call to DuckDuckGo for "Mixture of Experts vs dense models benefits"
+. Builds a sourced table with columns: *Benefit*, *Why it matters*, *Source*
+
+The response should include sourced rows for:
+
+* Compute-efficient pre-training
+* Faster inference (FLOP-equivalent to a 12B dense model)
+* Parameter-efficiency
+* Energy efficiency
+* Better with instruction tuning
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Multi-step research task complete. Latency: ___ seconds."
+----
+
+Record the total latency for this task (typically 6–10s): ______
+
+== Module summary
+
+* OpenCode connects to your RHOAI-hosted Nemotron endpoint via an OpenAI-compatible API
+* Three task types work out of the box: file system, web search, and multi-step research
+* The context panel confirms local inference with $0.00 cost
+* Latency scales with task complexity: ~2s for file queries, ~8s for researched answers
+
+Click **Module 4** in the navigation to explore conversational reasoning and guardrails.

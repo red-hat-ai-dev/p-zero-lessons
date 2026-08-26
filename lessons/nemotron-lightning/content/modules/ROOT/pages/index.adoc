@@ -1,0 +1,46 @@
+= Nemotron Lightning 30B — Day 0
+
+Welcome to the {lab_name} workshop! In this hands-on session you will deploy NVIDIA's Nemotron-3.5-Lightning-30B model on Red Hat OpenShift AI, use it as the backend for an AI coding assistant, and hold a multi-turn conversation that shows the model's built-in reasoning and safety mechanisms.
+
+== What you'll learn
+
+In this workshop, you will:
+
+* **Understand Nemotron Lightning 30B** — its Mixture-of-Experts architecture, NVFP4 quantization, and why it can run on a single H100
+* **Deploy the model with vLLM** — configure DSpark speculative decoding, fp8 KV cache, and the FlashInfer Mamba backend on RHOAI model serving
+* **Use OpenCode as an AI coding assistant** — point it at your live model endpoint and run file, web-search, and research tasks
+* **Explore conversational reasoning and guardrails** — connect Open WebUI to the same endpoint and interrogate the model's safety mechanisms
+
+== Who this is for
+
+Platform engineers and AI developers who want to deploy and interact with a state-of-the-art open-weight MoE model on OpenShift AI for the first time.
+
+**Experience level:** Beginner to Intermediate
+
+**Prerequisites:**
+
+* Basic familiarity with OpenShift (can navigate the console and run `oc` commands)
+* `oc` CLI and `helm` installed on your workstation
+* OpenCode v{opencode_version} installed on your workstation
+* Open WebUI (or equivalent) available in your environment
+
+== Understanding the workshop UI
+
+**Left panel**: Workshop instructions
+
+**Right panel**: Embedded terminal and OpenShift console
+
+Use the split-view divider to resize panels. All commands use the kbd:[copy] button — click it to send the command directly to the terminal.
+
+== Estimated time
+
+* Module 1 — Meet Nemotron Lightning 30B: *15–20 min*
+* Module 2 — Serve with vLLM on RHOAI: *30–40 min*
+* Module 3 — Agentic Coding with OpenCode: *25–30 min*
+* Module 4 — Chat and Guardrails: *20–25 min*
+
+**Total: ~90–120 minutes**
+
+== Let's get started!
+
+Click **Getting Connected** in the navigation to set up your environment.

@@ -1,0 +1,48 @@
+= Conclusion
+:navtitle: Conclusion
+
+Congratulations on completing the {lab_name} workshop!
+
+== What you accomplished
+
+[cols="1,3"]
+|===
+| Module | What you did
+
+| *1 — Meet Nemotron*
+| Explored the HuggingFace model card, understood MoE active-parameter sparsity, read benchmark results
+
+| *2 — Serve with vLLM*
+| Deployed the NVFP4 checkpoint on RHOAI with DSpark speculative decoding, fp8 KV cache, and FlashInfer Mamba backend. Verified a live `/v1/chat/completions` endpoint.
+
+| *3 — Agentic Coding*
+| Configured OpenCode to use your endpoint. Ran file, web-search, and multi-step corroborated research tasks.
+
+| *4 — Chat and Guardrails*
+| Connected Open WebUI, observed chain-of-thought reasoning, and interrogated the model's built-in safety mechanisms across five core areas.
+|===
+
+== Key takeaways
+
+* **MoE enables single-GPU efficiency** — 30B total parameters, 3B active per token, single H100 deployment
+* **vLLM flags matter** — `--moe-backend marlin`, `--kv-cache-dtype fp8`, and `--mamba-backend flashinfer` are all required for correct and efficient inference
+* **OpenAI-compatible API** — any tool that supports OpenAI's API (OpenCode, Open WebUI, `curl`) works against your self-hosted endpoint
+* **Guardrails are woven in, not bolted on** — they operate at training time, inference time, and output time simultaneously
+
+== Resources
+
+* https://huggingface.co/{hf_model_id}[Nemotron-3.5-Lightning-30B model card^]
+* https://docs.vllm.ai[vLLM documentation^]
+* https://access.redhat.com/documentation/en-us/red_hat_openshift_ai[Red Hat OpenShift AI documentation^]
+* https://github.com/sst/opencode[OpenCode on GitHub^]
+* https://github.com/open-webui/open-webui[Open WebUI on GitHub^]
+
+== What's next
+
+This was Day 0 — getting the model running and exploring its capabilities. Look for Day 1 content that covers:
+
+* Fine-tuning with NeMo and llm-compressor
+* Serving at scale with multi-replica vLLM on OpenShift
+* Integrating Nemotron into an agentic pipeline with LangGraph
+
+Thank you for participating in the {lab_name} workshop!

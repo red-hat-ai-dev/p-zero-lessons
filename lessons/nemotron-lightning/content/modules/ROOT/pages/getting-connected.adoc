@@ -1,0 +1,62 @@
+= Getting Connected
+:navtitle: Getting Connected
+
+In this activity you will log into OpenShift AI and verify your environment is ready for the workshop exercises.
+
+== Login to OpenShift
+
+Navigate to the OpenShift console and log in with your workshop credentials:
+
+**Console URL:** `{openshift_console_url}`
+
+**Username:** `{user}`
+
+**Password:** `{password}`
+
+== Verify CLI access
+
+Open the terminal panel on the right. Confirm your CLI is authenticated:
+
+[source,bash,role="execute",subs="attributes"]
+----
+oc login {openshift_api_url} -u {user} -p {password}
+----
+
+Verify you are logged in:
+
+[source,bash,role="execute"]
+----
+oc whoami
+----
+
+You should see your username returned.
+
+== Check the RHOAI dashboard
+
+Navigate to the RHOAI dashboard:
+
+**RHOAI Dashboard:** `{rhoai_dashboard_url}`
+
+Log in with the same credentials. You should see the OpenShift AI overview page with your data science projects listed.
+
+== Verify GPU availability
+
+Confirm a GPU node is available on the cluster:
+
+[source,bash,role="execute"]
+----
+oc get nodes -l nvidia.com/gpu.present=true
+----
+
+You should see at least one node in `Ready` state.
+
+[source,bash,role="execute"]
+----
+oc describe node -l nvidia.com/gpu.present=true | grep -A5 "Capacity:"
+----
+
+Confirm the node reports GPU capacity (e.g., `nvidia.com/gpu: 1`).
+
+== End of activity
+
+Congratulations, your environment is ready. Click **Module 1** in the navigation to begin.
