@@ -1,0 +1,12 @@
+{
+  "name": "zt-laguna-demo-showroom",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "antora site.yml"
+  },
+  "devDependencies": {
+    "@antora/cli": "3.1.9",
+    "@antora/site-generator": "3.1.9"
+  }
+}

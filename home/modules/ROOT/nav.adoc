@@ -3,3 +3,4 @@
 .Lessons
 * xref:nemotron-lightning::index.adoc[Nemotron Lightning 30B — Day 0]
 * xref:playground-create::index.adoc[RHOAI Gen AI Studio Playground]
+* xref:laguna-demo::index.adoc[Laguna S 2.1 — vLLM Inference]

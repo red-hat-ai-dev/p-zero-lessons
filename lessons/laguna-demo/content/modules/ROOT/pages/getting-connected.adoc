@@ -1,0 +1,64 @@
+= Getting Connected
+:navtitle: Getting Connected
+
+In this activity you will connect to the H100 GPU node and verify that vLLM is running and ready before beginning the workshop exercises.
+
+== Connect to the H100 node
+
+The terminal panel on the right is already connected to the lab environment.
+Verify your connection by checking the hostname:
+
+[source,bash,role="execute"]
+----
+hostname
+----
+
+You should see the H100 node hostname (e.g., `{h100_host}`).
+
+== Verify the vLLM container is running
+
+The `{vllm_container}` Podman container should already be running, serving the model on `localhost:8000`.
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman ps --filter name={vllm_container} --format "table {{{{.Names}}}}\t{{{{.Status}}}}\t{{{{.Ports}}}}"
+----
+
+You should see the container listed with a status of `Up`.
+
+If the container is not running, notify your lab facilitator before proceeding.
+
+== Verify the vLLM API is responding
+
+Send a quick health check to the vLLM server:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -s {vllm_url}/health
+----
+
+You should receive a `200 OK` response or an empty body — this confirms the server is accepting requests.
+
+== Verify the model is loaded
+
+Check which model the server is serving:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -s {vllm_url}/v1/models | python3 -m json.tool
+----
+
+You should see `{model_id}` listed in the `data` array.
+
+== Verify Python 3 is available
+
+[source,bash,role="execute"]
+----
+python3 --version
+----
+
+You should see Python 3.x. Python's `json` and `sys` modules are used in Modules 2 and 3.
+
+== End of activity
+
+Your environment is ready. Click *Module 1* in the navigation to begin.

@@ -1,0 +1,7 @@
+* xref:index.adoc[Welcome]
+* xref:getting-connected.adoc[Getting Connected]
+* xref:01-module-01-discovery.adoc[Module 1: Model Discovery]
+* xref:02-module-02-inference.adoc[Module 2: curl + SSE Inference]
+* xref:03-module-03-chat-client.adoc[Module 3: Python Chat Client]
+* xref:04-module-04-ecosystem.adoc[Module 4: Red Hat AI Ecosystem]
+* xref:05-conclusion.adoc[Conclusion]

@@ -1,0 +1,47 @@
+= Laguna S 2.1 — vLLM Inference Workshop
+
+Welcome to the *{lab_name}* workshop!
+In this hands-on session you will discover, deploy, and query Red Hat AI's Laguna S 2.1 — a 117.6B Mixture-of-Experts model optimized for agentic coding — using vLLM running inside a Podman container on a bare-metal H100 GPU node.
+
+== What you'll learn
+
+In this workshop, you will:
+
+* *Evaluate a frontier model* — read the `RedHatAI/Laguna-S-2.1` HuggingFace model card, interpret benchmark results, and understand the relationship between the Red Hat AI mirror and the upstream Poolside model
+* *Query vLLM directly with curl* — construct a raw OpenAI-compatible `/v1/chat/completions` request, enable SSE streaming, and parse the response with an inline Python one-liner
+* *Build a reusable Python chat client* — understand and extend `chat.py`, which wraps the same inference flow in a clean script you can adapt for your own projects
+* *Navigate the Red Hat AI ecosystem* — explore the `RedHatAI` HuggingFace organization, understand validated model collections and quantization formats, and know where to go for production-ready model artifacts
+
+== Who this is for
+
+ML engineers and platform engineers who want to go beyond SDK black boxes and understand the raw inference wire protocol for locally-hosted LLMs.
+
+*Experience level:* Beginner to Intermediate
+
+*Prerequisites:*
+
+* Basic Linux terminal and `bash` skills
+* Basic Python 3 familiarity (`import`, `for` loops, `subprocess`)
+* Familiarity with REST APIs (HTTP POST, JSON, headers)
+* No prior vLLM or inference server experience required
+
+== Understanding the workshop UI
+
+*Left panel*: Workshop instructions
+
+*Right panel*: Embedded terminal connected to the H100 GPU node
+
+All commands use the kbd:[copy] button — click it to send the command directly to the terminal.
+
+== Estimated time
+
+* Module 1 — Model Discovery: *25 min*
+* Module 2 — curl + SSE Inference: *30 min*
+* Module 3 — Python Chat Client: *25 min*
+* Module 4 — Red Hat AI Ecosystem: *15 min*
+
+*Total: ~90–120 minutes*
+
+== Let's get started!
+
+Click *Getting Connected* in the navigation to verify your environment.
