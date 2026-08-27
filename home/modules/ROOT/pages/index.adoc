@@ -18,6 +18,10 @@ Each lesson is a self-contained lab covering a specific model, tool, or workflow
 | Navigate the RHOAI dashboard, create a Gen AI Studio playground, chat with a served model, and view the generated code
 | 30–45 min
 
+| xref:laguna-demo::index.adoc[Laguna S 2.1 — vLLM Inference]
+| Discover RedHatAI/Laguna-S-2.1 on HuggingFace, query it via curl + SSE streaming through a Podman-hosted vLLM server, and explore the Red Hat AI validated model ecosystem
+| 90–120 min
+
 |===
 
 == Adding a Lesson

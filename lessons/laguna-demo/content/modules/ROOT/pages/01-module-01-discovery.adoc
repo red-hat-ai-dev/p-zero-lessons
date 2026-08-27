@@ -1,0 +1,177 @@
+= Module 1: Model Discovery on HuggingFace
+:navtitle: Module 1: Model Discovery
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Identify the total and activated parameter counts for Laguna S 2.1 and explain what Mixture-of-Experts sparse activation means for GPU memory
+* Read benchmark results comparing Laguna S 2.1 to other frontier models on agentic coding tasks
+* Locate the required vLLM launch flags for the `RedHatAI/Laguna-S-2.1` model card
+* Explain the difference between the Red Hat AI mirror and the upstream Poolside model, and what the OpenMDW-1.1 license allows
+
+== Exercise 1: Explore the Red Hat AI model card
+
+Open the model card in your browser:
+
+link:{hf_model_url}[RedHatAI/Laguna-S-2.1 on HuggingFace^]
+
+=== 1.1 — Model overview
+
+Read the top of the model card and answer the following:
+
+[cols="2,3"]
+|===
+| Question | Where to look
+
+| Total parameter count?
+| Opening description
+
+| Activated parameters per token?
+| Opening description — "activated parameters"
+
+| Attention mechanism?
+| Highlights → Mixed SWA and global attention layout
+
+| KV cache format?
+| Highlights → KV cache in FP8
+
+| License?
+| Model card sidebar or footer
+|===
+
+NOTE: Laguna S 2.1 uses Sliding Window Attention (SWA) in 36 of 48 layers, with global attention in the remaining 12. This 3:1 ratio reduces KV cache size for long-context inference while maintaining quality.
+
+=== Verify
+
+You should be able to fill in these values without scrolling back:
+
+* Total params: *117.6B* (8.5B active per token)
+* Architecture: *Mixture-of-Experts with mixed SWA + global attention*
+* KV cache: *FP8 quantized*
+* License: *OpenMDW-1.1* (free for commercial and non-commercial use)
+
+[source,bash,role="execute"]
+----
+echo "Model card overview complete."
+----
+
+== Exercise 2: Read the benchmark table
+
+Scroll to the benchmark comparison section on the model card. Laguna S 2.1 is compared to Tencent Hy3, Inkling, Nemotron 3 Ultra, DeepSeek-V4-Pro Max, Kimi K3, Qwen 3.7 Max, Muse Spark 1.1, and Claude Fable 5.
+
+[cols="1,2,1"]
+|===
+| Benchmark | What it tests | Laguna S 2.1 score
+
+| TERMINAL-BENCH 2.1
+| Autonomous terminal task execution
+| 70.2
+
+| SWE-BENCH MULTI
+| Real-world multi-file GitHub issue resolution
+| 78.5
+
+| SWE-BENCH PRO (PUBLIC)
+| Harder real-world GitHub issue resolution
+| 59.4
+
+| DEEPSWE
+| Deep software engineering tasks
+| 40.4
+|===
+
+NOTE: TERMINAL-BENCH 2.1 and SWE-BENCH benchmarks are specifically designed for *agentic coding* models — ones that write, test, and fix code autonomously. These are the primary use cases Laguna S 2.1 is designed for.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Benchmarks noted: TERMINAL-BENCH 70.2, SWE-BENCH MULTI 78.5"
+----
+
+== Exercise 3: Understand the Red Hat AI mirror
+
+Scroll to the top of the model card and locate the **Model tree** sidebar (right column on HuggingFace).
+
+You will see that `RedHatAI/Laguna-S-2.1` traces to `poolside/Laguna-S-2.1` as its base model.
+
+Also navigate to the Red Hat AI organization page:
+
+link:{hf_redhatai_url}[RedHatAI on HuggingFace^]
+
+Compare the two organizations:
+
+[cols="1,2,2"]
+|===
+| | poolside | RedHatAI
+
+| Role
+| Model author (Poolside AI)
+| Red Hat AI validated mirror
+
+| Quantized variants
+| `poolside/Laguna-S-2.1-FP8` (published separately)
+| BF16 mirror; FP8 variants under development
+
+| Collection membership
+| Standalone
+| Red Hat AI validated model collections
+
+| Support
+| Poolside support
+| Red Hat support provenance for production use
+|===
+
+TIP: For this workshop, we use `RedHatAI/Laguna-S-2.1` — the same weights, hosted under the Red Hat AI organization. In production, using a `RedHatAI/` model gives you Red Hat's validation trail and collection membership.
+
+=== 3.1 — vLLM launch flags
+
+The `RedHatAI/Laguna-S-2.1` model card specifies special parser flags that vLLM requires to correctly handle Laguna's tool calls and reasoning output. Locate these flags in the card's deployment section:
+
+[source,bash]
+----
+--tool-call-parser poolside_v1
+--reasoning-parser poolside_v1
+--enable-auto-tool-choice
+--quantization fp8
+----
+
+NOTE: The `poolside_v1` parsers tell vLLM how to decode Laguna's native tool call and chain-of-thought output formats. Without them, tool use and reasoning tokens may be returned as raw text.
+
+=== 3.2 — 1M context configuration
+
+Locate the *1M context* configuration snippet in the model card. By default, the model uses a 256K context window. To enable 1M tokens, edit `config.json`:
+
+[source,json]
+----
+"rope_parameters": {
+  "full_attention": {
+    "factor": 128.0,
+    "attention_factor": 1.4852030263919618
+  }
+},
+"max_position_embeddings": 1048576
+----
+
+WARNING: Red Hat recommends `temperature <= 0.7` and `top_p <= 0.95` when using the 1M context configuration to maintain output quality.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Model card review complete. vLLM flags: --tool-call-parser poolside_v1 --reasoning-parser poolside_v1"
+----
+
+== Module summary
+
+* `RedHatAI/Laguna-S-2.1` is a 117.6B MoE model with 8.5B parameters active per token — inference cost is closer to an 8.5B dense model
+* Mixed SWA + global attention (3:1 ratio) reduces KV cache requirements for long sequences
+* Benchmarks focus on agentic coding: TERMINAL-BENCH 2.1 (70.2), SWE-BENCH MULTI (78.5)
+* Special vLLM parsers (`poolside_v1`) are required for correct tool call and reasoning handling
+* OpenMDW-1.1 license allows free commercial and non-commercial use
+
+Click *Module 2* to send your first inference request to the running vLLM server.

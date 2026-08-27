@@ -1,0 +1,40 @@
+= Conclusion
+:navtitle: Conclusion
+
+Congratulations — you have completed the *{lab_name}* workshop!
+
+== What you accomplished
+
+=== Module 1: Model Discovery
+
+You read the `RedHatAI/Laguna-S-2.1` model card on HuggingFace, interpreted benchmark results across TERMINAL-BENCH 2.1 and SWE-BENCH variants, and understood the relationship between the Red Hat AI mirror and the upstream Poolside model. You can now evaluate a frontier model's deployment requirements before committing to running it.
+
+=== Module 2: curl + SSE Inference
+
+You sent raw HTTP requests to a vLLM OpenAI-compatible API through `podman exec`, observed Server-Sent Events streaming, and built an inline Python SSE parser. You understand the wire protocol — `data:` lines, `[DONE]` sentinel, `choices[0].delta.content` extraction — that underpins every streaming LLM integration.
+
+=== Module 3: Python Chat Client
+
+You read and extended `chat.py`, a minimal but complete Python inference client. You modified `max_tokens`, added a system message, and understood why `subprocess.Popen` wraps Podman in this lab versus using `requests` directly in production.
+
+=== Module 4: Red Hat AI Ecosystem
+
+You navigated the `RedHatAI` HuggingFace organization, identified validated model collections, and can now explain the difference between quantization formats (FP8-block, FP8-dynamic, NVFP4) and when to use each.
+
+== Key concepts to carry forward
+
+* *vLLM + Podman*: Any OpenAI-compatible client works against a vLLM server — your existing tools, SDKs, and scripts need only a URL change
+* *Laguna poolside_v1 parsers*: Always add `--tool-call-parser poolside_v1 --reasoning-parser poolside_v1 --enable-auto-tool-choice` when serving Laguna S 2.1 with vLLM
+* *SSE streaming*: `-sN` with curl, `flush=True` in Python — two flags that make all the difference for real-time token output
+* *Red Hat AI validated collections*: Check `huggingface.co/RedHatAI` monthly for production-ready, Red Hat-supported model artifacts
+
+== Resources
+
+* link:https://huggingface.co/RedHatAI[RedHatAI on HuggingFace^]
+* link:https://huggingface.co/RedHatAI/Laguna-S-2.1[RedHatAI/Laguna-S-2.1 model card^]
+* link:https://docs.vllm.ai[vLLM documentation^]
+* link:https://github.com/rhpds/ai-lightning-wordswarm-showroom[Workshop showroom exemplar^]
+
+== Thank you!
+
+This workshop was built using the Red Hat AI OODA Workshop Factory pipeline.

@@ -1,0 +1,188 @@
+= Module 3: Python Chat Client
+:navtitle: Module 3: Python Chat Client
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Read and explain each logical section of the `chat.py` script
+* Run `chat.py` with a CLI argument and in interactive prompt mode
+* Modify `max_tokens` and observe the effect on response length
+* Add a system message to shape model behavior
+* Explain why `subprocess.Popen` is used instead of the `requests` library in this lab
+
+== Exercise 1: Read chat.py
+
+The `chat.py` script is pre-placed at `{chat_script_path}` on this node. Display it:
+
+[source,bash,role="execute",subs="attributes"]
+----
+cat {chat_script_path}
+----
+
+You should see the full script. Identify these four logical sections:
+
+[cols="1,3"]
+|===
+| Section | What it does
+
+| *Model / URL constants*
+| `MODEL = "{model_id}"` and `URL = "{vllm_url}/v1/chat/completions"` — the only place to change the model or endpoint
+
+| *Prompt handling*
+| `sys.argv[1:]` joined as the prompt, or `input("Prompt: ")` if no CLI args — the script works both ways
+
+| *subprocess.Popen*
+| Runs `podman exec {vllm_container} curl ...` as a child process, capturing stdout as a stream
+
+| *SSE parsing loop*
+| Identical to the Module 2 inline parser — filters `data:` lines, skips `[DONE]`, prints `delta.content`
+|===
+
+NOTE: `subprocess.Popen` is used instead of the `requests` library because the vLLM server is inside the Podman container, not accessible from the host network. `podman exec` is the bridge — it runs `curl` inside the container where `localhost:8000` resolves correctly. In a production deployment where the model is exposed via a route or load balancer, you would use `requests` directly.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "chat.py sections identified."
+----
+
+== Exercise 2: Run chat.py with a CLI argument
+
+Pass a prompt directly on the command line:
+
+[source,bash,role="execute",subs="attributes"]
+----
+python3 {chat_script_path} "Hello — what is the best thing about vLLM?"
+----
+
+The model's response should stream to the terminal immediately.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "CLI argument mode confirmed."
+----
+
+== Exercise 3: Run chat.py in interactive mode
+
+Run without arguments to use the interactive prompt:
+
+[source,bash,role="execute",subs="attributes"]
+----
+python3 {chat_script_path}
+----
+
+At the `Prompt:` input, type:
+
+[source,role="execute"]
+----
+Please write a Python function to find the nth Fibonacci number using memoization.
+----
+
+Observe the streamed response.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Interactive mode confirmed."
+----
+
+== Exercise 4: Modify max_tokens
+
+Open `chat.py` in a text editor and change `max_tokens` from `2048` to `128`:
+
+[source,bash,role="execute",subs="attributes"]
+----
+sed -i 's/"max_tokens": 2048/"max_tokens": 128/' {chat_script_path}
+----
+
+Run the script again with the same Fibonacci prompt:
+
+[source,bash,role="execute",subs="attributes"]
+----
+python3 {chat_script_path} "Write a Python function for Fibonacci with memoization."
+----
+
+The response should be cut off at approximately 128 tokens.
+
+Restore the original value:
+
+[source,bash,role="execute",subs="attributes"]
+----
+sed -i 's/"max_tokens": 128/"max_tokens": 2048/' {chat_script_path}
+----
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "max_tokens modification tested and restored."
+----
+
+== Exercise 5: Add a system message
+
+The current `chat.py` sends only a user message. Add a system message to shape the model's behavior. Open the file:
+
+[source,bash,role="execute",subs="attributes"]
+----
+cat {chat_script_path}
+----
+
+The `messages` list currently looks like:
+
+[source,python]
+----
+"messages": [{"role": "user", "content": prompt}]
+----
+
+Modify it to prepend a system message:
+
+[source,bash,role="execute",subs="attributes"]
+----
+python3 -c "
+import re, pathlib
+
+p = pathlib.Path('{chat_script_path}')
+text = p.read_text()
+old = '\"messages\": [{\"role\": \"user\", \"content\": prompt}]'
+new = ('\"messages\": ['
+       '{\"role\": \"system\", \"content\": \"You are a concise assistant. Keep all answers under 3 sentences.\"},'
+       '{\"role\": \"user\", \"content\": prompt}'
+       ']')
+p.write_text(text.replace(old, new))
+print('System message added.')
+"
+----
+
+Test the change:
+
+[source,bash,role="execute",subs="attributes"]
+----
+python3 {chat_script_path} "Explain Kubernetes in simple terms."
+----
+
+The response should be noticeably shorter and more direct.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "System message exercise complete."
+----
+
+== Module summary
+
+* `chat.py` wraps the same `podman exec curl` + SSE parsing flow from Module 2 into a clean, reusable script
+* Model ID and endpoint are set once as constants — change them here to point at any vLLM-compatible server
+* CLI argument mode (`python3 chat.py "your prompt"`) and interactive mode (`python3 chat.py`) both work
+* `max_tokens` controls response length; lower values truncate earlier (useful for cost control)
+* System messages prepended to the `messages` list set persistent behavior constraints across all user turns
+
+Click *Module 4* to explore the broader Red Hat AI model ecosystem.

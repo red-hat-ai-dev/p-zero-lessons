@@ -1,0 +1,26 @@
+name: laguna-demo
+title: "Laguna S 2.1 — vLLM Inference Workshop"
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    source-highlighter: highlight.js
+    experimental: true
+    page-pagination: true
+    showroom-collection-version: v1.5.2
+    lab_name: "Laguna S 2.1 — vLLM Inference Workshop"
+    guid: abc123
+    user: "user1"
+    password: "%password%"
+    h100_host: "h100-03"
+    vllm_container: "vllm-laguna-s21"
+    vllm_url: "http://localhost:8000"
+    model_id: "RedHatAI/Laguna-S-2.1"
+    hf_model_url: "https://huggingface.co/RedHatAI/Laguna-S-2.1"
+    hf_redhatai_url: "https://huggingface.co/RedHatAI"
+    chat_script_path: "/tmp/chat.py"
+    openshift_api_url: "https://api.cluster.example.com:6443"
+    openshift_console_url: "https://console-openshift-console.apps.cluster.example.com"
+    openshift_cluster_ingress_domain: "apps.cluster.example.com"

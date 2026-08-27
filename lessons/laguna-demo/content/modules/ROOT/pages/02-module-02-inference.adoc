@@ -1,0 +1,199 @@
+= Module 2: vLLM Inference via curl and SSE Streaming
+:navtitle: Module 2: curl + SSE Inference
+:toc: macro
+
+toc::[]
+
+== Learning objectives
+
+After completing this module, you will be able to:
+
+* Verify that a vLLM container is running and serving on `localhost:8000` inside Podman
+* Construct a complete OpenAI-compatible `/v1/chat/completions` POST request using `curl`
+* Enable SSE (Server-Sent Events) streaming and identify the `data:` line format and `[DONE]` sentinel
+* Parse a streaming response with an inline Python one-liner to extract clean token output
+
+== Exercise 1: Verify the container and endpoint
+
+Confirm the container is up and accepting requests:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman ps --filter name={vllm_container} --format "{{{{.Names}}}}\t{{{{.Status}}}}"
+----
+
+You should see `{vllm_container}` listed as `Up`.
+
+List the available models to confirm `{model_id}` is loaded:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -s {vllm_url}/v1/models \
+  | python3 -c "import json,sys; [print(m['id']) for m in json.load(sys.stdin)['data']]"
+----
+
+=== Verify
+
+You should see `{model_id}` printed. If you see a different model ID, check with your facilitator — the `--model` flag on the container must match the ID you pass in API requests.
+
+== Exercise 2: Send your first inference request
+
+Use `podman exec` to run `curl` inside the container, where `localhost:8000` resolves to the vLLM server:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -s \
+  -X POST {vllm_url}/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "{model_id}",
+    "messages": [
+      {"role": "user", "content": "In one sentence, what is vLLM?"}
+    ],
+    "max_tokens": 64
+  }'
+----
+
+You should receive a JSON response with a `choices` array. The model's answer is in `choices[0].message.content`.
+
+NOTE: This request uses *non-streaming* mode — the server buffers the full response before returning it. For long outputs this adds latency. Module 2 will show you how streaming eliminates this wait.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Non-streaming request successful."
+----
+
+== Exercise 3: Enable SSE streaming
+
+Add `"stream": true` to receive the response token-by-token as Server-Sent Events:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -sN \
+  -X POST {vllm_url}/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "{model_id}",
+    "messages": [
+      {"role": "user", "content": "Please write a function to reverse a linked list."}
+    ],
+    "max_tokens": 256,
+    "stream": true
+  }'
+----
+
+Observe the raw output. Each line begins with `data: ` followed by a JSON chunk. The final line is `data: [DONE]`.
+
+NOTE: The `-N` flag disables curl's output buffering so you see tokens as they arrive. Without `-N`, curl buffers the stream and you see all tokens at once at the end — defeating the purpose of streaming.
+
+=== 3.1 — Understand the SSE format
+
+[source]
+----
+data: {"id":"...","choices":[{"delta":{"content":"To"},"index":0,...}],...}
+data: {"id":"...","choices":[{"delta":{"content":" reverse"},"index":0,...}],...}
+...
+data: [DONE]
+----
+
+Each `data:` line is a JSON object. The token text is at `choices[0].delta.content`. The `delta` field uses partial updates — only the new token is sent per line, not the accumulated response.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "SSE streaming observed. data: lines and [DONE] sentinel identified."
+----
+
+== Exercise 4: Parse the stream with Python
+
+Pipe the streaming output through a Python inline parser to extract readable token text:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -sN \
+  -X POST {vllm_url}/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "{model_id}",
+    "messages": [
+      {"role": "user", "content": "Please write a function to reverse a linked list."}
+    ],
+    "max_tokens": 256,
+    "stream": true
+  }' | python3 -c '
+import sys, json
+for line in sys.stdin:
+    line = line.strip()
+    if line.startswith("data: ") and line != "data: [DONE]":
+        try:
+            payload = json.loads(line[6:])
+            content = payload["choices"][0]["delta"].get("content", "")
+            print(content, end="", flush=True)
+        except Exception:
+            pass
+print()
+'
+----
+
+You should see the model's response printed cleanly, one token at a time, without `data:` prefixes or JSON noise.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "SSE parser working. Clean streamed output confirmed."
+----
+
+== Exercise 5: Try the reasoning mode
+
+Laguna S 2.1 supports per-request thinking via `chat_template_kwargs`. Enable it to see the model's chain-of-thought before its final answer:
+
+[source,bash,role="execute",subs="attributes"]
+----
+podman exec {vllm_container} curl -sN \
+  -X POST {vllm_url}/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "{model_id}",
+    "messages": [
+      {"role": "user", "content": "What is the time complexity of binary search?"}
+    ],
+    "max_tokens": 512,
+    "stream": true,
+    "chat_template_kwargs": {"enable_thinking": true}
+  }' | python3 -c '
+import sys, json
+for line in sys.stdin:
+    line = line.strip()
+    if line.startswith("data: ") and line != "data: [DONE]":
+        try:
+            payload = json.loads(line[6:])
+            content = payload["choices"][0]["delta"].get("content", "")
+            print(content, end="", flush=True)
+        except Exception:
+            pass
+print()
+'
+----
+
+TIP: With `enable_thinking: true`, the model emits its reasoning process before the final answer. This is useful for debugging agentic tasks where you want to understand *why* the model made a decision.
+
+=== Verify
+
+[source,bash,role="execute"]
+----
+echo "Reasoning mode tested."
+----
+
+== Module summary
+
+* `podman exec <container> curl` routes HTTP requests to the vLLM server inside the container network
+* The OpenAI `/v1/chat/completions` endpoint accepts `model`, `messages`, `max_tokens`, and `stream`
+* SSE streaming sends `data: <json>` lines; `-N` prevents curl from buffering
+* The Python parser: filter `data:` lines → skip `[DONE]` → parse JSON → print `delta.content` with `flush=True`
+* Laguna S 2.1 supports `chat_template_kwargs: {enable_thinking: true}` for per-request reasoning
+
+Click *Module 3* to wrap this flow in a reusable Python script.
