@@ -1,0 +1,65 @@
+= {lab_name}
+:navtitle: Welcome
+
+Welcome to the *{lab_name}* workshop.
+
+Most teams ship AI agents with a policy document in a shared drive and a system prompt that says "be safe." In this hands-on lab you will see exactly how wide the gap between those two things can get, and what it takes to close it.
+
+You will build and break a support agent running on Red Hat OpenShift AI, then use asago (an open source project from Red Hat, IBM Research, Microsoft, NVIDIA, and MIT Lincoln Laboratory) to connect a real governance document to automated tests that catch policy violations before they reach production.
+
+== What you will learn
+
+* How to set up a basic MCP-based agent with vLLM on OpenShift AI
+* How asago's policy mapper turns governance prose into named, testable risks
+* How MiDojo red teams an agent by injecting attacks through its own tool data
+* Why system prompt fixes barely help against indirect prompt injection
+* Why tool-level enforcement is the layer that actually holds
+
+== Who this is for
+
+* Platform engineers and ML engineers responsible for agent governance
+* Security teams evaluating agent risk before production deployment
+* Developers building MCP-based agents who want to understand their attack surface
+
+*Experience level:* Intermediate
+
+== Prerequisites
+
+* Basic Python familiarity and terminal skills
+* `uv` package manager installed (or willingness to install it)
+* Access to an OpenAI-compatible model endpoint (this lab uses Llama 4 Scout via Models-as-a-Service on OpenShift AI)
+* No prior asago or MiDojo experience required
+
+== Your lab environment
+
+[cols="1,2",options="header"]
+|===
+| Resource | URL / Value
+
+| Model Endpoint
+| `{llm_url}`
+
+| Model Name
+| `{llm_model}`
+
+| Demo Repository
+| link:{demo_repo}[asago-supportdesk-demo^]
+
+| asago Project
+| link:{asago_repo}[github.com/asago-ai^]
+|===
+
+== Estimated time
+
+* Module 1 (Clone & Explore): *10 min*
+* Module 2 (Run Support Bot): *5 min*
+* Module 3 (Map Policy to Risks): *10 min*
+* Module 4 (Red Team with MiDojo): *10 min*
+* Module 5 (Fix & Retest): *10 min*
+* Summary: *5 min*
+
+*Total: ~45-60 minutes*
+
+== Let's get started
+
+Click *1. Clone & Explore* in the navigation to set up the demo.

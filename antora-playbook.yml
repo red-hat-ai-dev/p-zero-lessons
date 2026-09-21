@@ -20,6 +20,9 @@ content:
     - url: .
       start_path: lessons/laguna-demo/content
 
+    - url: .
+      start_path: lessons/asago-supportdesk/content
+
 ui:
   bundle:
     url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/summit-2026/ui-bundle.zip
