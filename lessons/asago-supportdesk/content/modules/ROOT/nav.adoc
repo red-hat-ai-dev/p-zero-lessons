@@ -1,0 +1,7 @@
+* xref:index.adoc[Welcome]
+* xref:module-01-setup.adoc[1. Clone & Explore]
+* xref:module-02-baseline.adoc[2. Run Support Bot]
+* xref:module-03-policy.adoc[3. Map Policy to Risks]
+* xref:module-04-redteam.adoc[4. Red Team with MiDojo]
+* xref:module-05-fix.adoc[5. Fix & Retest]
+* xref:module-06-summary.adoc[Summary & Next Steps]

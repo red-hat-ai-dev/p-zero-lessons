@@ -1,0 +1,117 @@
+= Module 1: Clone and Explore
+:navtitle: 1. Clone & Explore
+
+⏱ *Estimated time: 10 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Clone the asago-supportdesk-demo repository and install dependencies
+* Identify the three MCP tools Support Bot uses (order lookup, customer lookup, email)
+* Configure the agent to point at your model endpoint
+* Understand how the agent loop connects to MCP
+
+== Exercise 1: Clone the repository
+
+. Clone the demo repo and install dependencies:
++
+[source,bash,role="execute",subs="attributes"]
+----
+git clone {demo_repo} && cd asago-supportdesk-demo
+uv sync
+----
+
+. Verify the project structure:
++
+[source,bash,role="execute"]
+----
+find . -name "*.py" -o -name "*.yaml" -o -name "*.md" | grep -v __pycache__ | sort
+----
+
+=== Verify
+
+You should see a structure like this:
+
+* `supportdesk/agent.py` — the agent loop
+* `supportdesk/mcp_server.py` — MCP tool definitions (get_order, get_customer, send_followup_email)
+* `supportdesk/data.py` — sample customer and order data
+* `policy/support-ai-policy.md` — the governance document
+* `midojo/` — the test suite
+* `run.sh` — test runner
+
+== Exercise 2: Explore the MCP tools
+
+. Open the MCP server to see what tools Support Bot has:
++
+[source,bash,role="execute"]
+----
+cat supportdesk/mcp_server.py
+----
+
+The agent has three tools:
+
+[cols="1,2"]
+|===
+| Tool | What it does
+
+| `get_order`
+| Looks up an order by ID, returns status, carrier, and free-text notes
+
+| `get_customer`
+| Looks up a customer by ID, returns name, email, phone, address, and last four digits of their card
+
+| `send_followup_email`
+| Sends an email to any address with any subject and body
+|===
+
+NOTE: The `send_followup_email` tool currently accepts any email address. There is no validation on who the email is sent to. Keep that in mind.
+
+== Exercise 3: Read the agent loop
+
+. Look at the core agent logic:
++
+[source,bash,role="execute"]
+----
+cat supportdesk/agent.py
+----
+
+The agent loop is straightforward:
+
+. Receives a user prompt
+. Sends it to the model along with the available MCP tools
+. If the model calls a tool, executes the call and feeds the result back
+. Repeats until the model produces a final text response
+
+This is the same pattern most production MCP agents use. Nothing unusual here.
+
+== Exercise 4: Configure your model endpoint
+
+. Set your environment variables for the model:
++
+[source,bash,role="execute",subs="attributes"]
+----
+export LLM_URL={llm_url}
+export LLM_KEY={llm_key}
+export LLM_MODEL={llm_model}
+----
+
+. Verify the model is reachable:
++
+[source,bash,role="execute"]
+----
+curl -s "$LLM_URL/models" -H "Authorization: Bearer $LLM_KEY" | python3 -m json.tool | head -20
+----
+
+=== Verify
+
+You should see a JSON response listing available models, including `{llm_model}`.
+
+== Module summary
+
+* The demo repo contains a complete MCP agent with three tools and a governance policy
+* The agent loop follows a standard tool-calling pattern: prompt, tool call, result, repeat
+* The email tool has no recipient validation
+* Your model endpoint is configured and reachable
+
+Click *2. Run Support Bot* to see the agent handle a real query.

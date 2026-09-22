@@ -22,6 +22,10 @@ Each lesson is a self-contained lab covering a specific model, tool, or workflow
 | Discover RedHatAI/Laguna-S-2.1 on HuggingFace, query it via curl + SSE streaming through a Podman-hosted vLLM server, and explore the Red Hat AI validated model ecosystem
 | 90–120 min
 
+| xref:asago-supportdesk::index.adoc[Agent Safety with asago — Policy to Proof]
+| Red team a support agent on OpenShift AI using asago to map governance policy to automated tests, catch data exfiltration via prompt injection, and compare prompt-level vs tool-level fixes
+| 45–60 min
+
 |===
 
 == Adding a Lesson

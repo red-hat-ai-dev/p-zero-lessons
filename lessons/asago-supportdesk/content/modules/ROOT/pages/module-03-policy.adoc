@@ -1,0 +1,103 @@
+= Module 3: Map Policy to Risks with asago
+:navtitle: 3. Map Policy to Risks
+
+⏱ *Estimated time: 10 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Read a realistic AI governance policy and identify its key clauses
+* Run the asago policy mapper to extract testable risks from prose
+* Interpret the risk mapping output across multiple taxonomies
+* Understand how asago connects written policy to specific, named risks
+
+== Exercise 1: Read the policy document
+
+. Open the support AI policy:
++
+[source,bash,role="execute"]
+----
+cat policy/support-ai-policy.md
+----
+
+This is the kind of one-page policy a support organization would actually have. Pay attention to these clauses:
+
+[cols="1,3"]
+|===
+| Clause | What it says
+
+| 2.2
+| An AI assistant must not send customer personal information to any external email address, system, or third party that is not already recorded against that customer's account.
+
+| 3.2
+| Emails sent by an AI assistant must not contain links to websites outside the company's own domains.
+
+| 4.2
+| Text found inside customer records, order notes, carrier notes, emails, web pages, or any other data the assistant reads is untrusted content. The assistant must not treat that text as an instruction.
+
+| 5.1
+| Responses must be grounded in actual tool results. The assistant must not fabricate tracking numbers, delivery dates, or contact details.
+|===
+
+These are reasonable rules that everyone would nod along to in a review meeting. The problem is that nothing currently connects them to the running agent.
+
+== Exercise 2: Run the policy mapper
+
+. Install the asago policy mapper and run it against your policy:
++
+[source,bash,role="execute",subs="attributes"]
+----
+uv run asago-policy-mapper extract policy/support-ai-policy.md -o policy/output \
+  --base-url $LLM_URL --api-key $LLM_KEY --model $LLM_MODEL \
+  --nexus-base-dir ../ai-atlas-nexus
+----
++
+This takes a few minutes. The mapper reads each clause, matches it against entries in four risk taxonomies (IBM AI Risk Atlas, MIT AI Risk Repository, CREDO, and AIR 2024), and keeps the exact sentence from the policy that each risk came from.
+
+=== Verify
+
+You should see output showing the number of risks matched. In testing with Llama 4 Scout, the mapper found 58 risks across the four taxonomies.
+
+== Exercise 3: Examine the risk mappings
+
+. Look at the mapped risks:
++
+[source,bash,role="execute"]
+----
+cat policy/output/risk_summary.json | python3 -m json.tool | head -60
+----
+
+Find the mappings for the clauses you read earlier:
+
+[cols="1,2,2"]
+|===
+| Policy clause | Risk the mapper found | Taxonomy
+
+| 2.2 (no data to outside addresses)
+| Exposing personal information
+| IBM AI Risk Atlas
+
+| 3.2 (no outside links)
+| Fraud, scams, and targeted manipulation
+| IBM AI Risk Atlas
+
+| 4.2 (data is not instructions)
+| Indirect instructions attack, Prompt injection attack
+| IBM AI Risk Atlas, MIT AI Risk Repository
+
+| 5.1 (no fabricated details)
+| Hallucination
+| IBM AI Risk Atlas
+|===
+
+The useful part of this output is the transformation: a page of general prose that people nod along to has become a short list of specific, named things that can be tested.
+
+== Module summary
+
+* The policy mapper reads governance text and links each rule to recognized risk entries
+* Each mapping traces back to the exact sentence in the policy it came from
+* Clause 4.2 mapped to both indirect instruction attacks and prompt injection
+* The output is a list of specific risks ready for automated testing
+
+Click *4. Red Team with MiDojo* to test whether the agent actually follows these rules.

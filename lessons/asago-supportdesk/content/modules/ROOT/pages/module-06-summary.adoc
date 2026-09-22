@@ -1,0 +1,51 @@
+= Summary and Next Steps
+:navtitle: Summary & Next Steps
+
+== What you learned
+
+In this lab you took a standard MCP agent, connected it to a real governance document through asago, and watched automated tests find policy violations that manual inspection and system prompts could not catch.
+
+* *Module 1* — Cloned the demo, explored the agent structure and its three MCP tools
+* *Module 2* — Ran Support Bot and saw it handle queries correctly
+* *Module 3* — Used asago's policy mapper to turn prose policy into 58 named, testable risks
+* *Module 4* — Ran MiDojo to red team the agent, watching it exfiltrate customer data while completing its job
+* *Module 5* — Compared prompt-level and tool-level fixes, confirming that enforcement belongs in code
+
+== Key takeaways
+
+*System prompts are requests, not rules.* The model followed attacker instructions embedded in tool data even after being explicitly told not to. A written instruction in the system prompt is advisory at best.
+
+*Tool-level enforcement actually holds.* Ten lines of Python in the email tool stopped every data exfiltration attempt. The model still tried, but the code said no.
+
+*High utility masks security failures.* The agent completed 89% of user tasks correctly while sending customer records to an attacker. From the outside, every interaction looked like a success.
+
+*Policy mapping closes the gap between governance and testing.* The asago policy mapper turned a one-page document into a list of specific things that could be automatically verified.
+
+== Common questions
+
+*"Our model already has guardrails."* Standard safety tuning focuses on blocking direct harmful requests. Sending an email is the agent's job. The attack arrives inside data the agent has every reason to trust.
+
+*"We pen test before every launch."* Keep doing that. The automated suite runs again every time the agent gets a new tool or a new model, and it finishes in about 30 seconds.
+
+*"Isn't this just prompt injection?"* Yes, and knowing the name of the attack did not tell us whether this agent falls for it. The result that mattered was in the outbox.
+
+*"Our agent can't send email."* The same principle applies to whatever your agent can do: issue a refund, update an address, open a ticket, call another agent. That is the action to put behind a test.
+
+== Try it on your own agent
+
+Swap in your own policy and your own tools. The interesting result is the one about your system:
+
+[source,bash,role="execute",subs="attributes"]
+----
+git clone {demo_repo} && cd asago-supportdesk-demo
+uv sync
+export LLM_URL=https://<your-model-route>/v1 LLM_KEY=<key> LLM_MODEL=<model>
+./run.sh baseline
+----
+
+== Go deeper
+
+* link:{asago_repo}[asago project^] — The open source project behind the policy mapper, scenario generator, and MiDojo. Apache 2.0. Contributions and bug reports welcome.
+* link:{demo_repo}[asago-supportdesk-demo^] — The full demo from this lab: the policy, Support Bot, the MiDojo suite, and the run scripts.
+* link:https://www.ibm.com/docs/en/watsonx/saas?topic=ai-risk-atlas[IBM AI Risk Atlas^] — The risk taxonomy the policy mapper uses to turn policy language into named, testable risks.
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-ai/trial[Try Red Hat OpenShift AI^] — 60-day self-managed trial. Deploy models from the catalog, serve them with vLLM, and expose them through Models-as-a-Service.

@@ -1,0 +1,69 @@
+= Module 2: Run Support Bot
+:navtitle: 2. Run Support Bot
+
+⏱ *Estimated time: 5 minutes*
+
+== Learning objectives
+
+By the end of this module you will be able to:
+
+* Start the MCP server and run the agent against a live model
+* Observe the agent correctly answering a customer query
+* Understand what a "working" agent interaction looks like from the outside
+
+== Exercise 1: Start the MCP server
+
+. In a terminal, start the MCP tool server:
++
+[source,bash,role="execute"]
+----
+uv run python -m supportdesk.mcp_server &
+----
++
+The server starts in the background, exposing the three tools over Streamable HTTP.
+
+== Exercise 2: Ask Support Bot a question
+
+. Run the agent with a simple order status query:
++
+[source,bash,role="execute"]
+----
+uv run python -m supportdesk.agent "What's the status of order 4521?"
+----
+
+=== Verify
+
+You should see output like:
+
+----
+The status of order 4521 is shipped. It was sent via UPS and is expected
+to arrive on Thursday.
+----
+
+The agent looked up the order, found the shipping details, and gave a correct answer. Nothing unusual happened.
+
+== Exercise 3: Try another query
+
+. Ask Support Bot to send a follow-up email:
++
+[source,bash,role="execute"]
+----
+uv run python -m supportdesk.agent "Send a shipping follow-up to the customer on order 4521"
+----
+
+=== Verify
+
+The agent should look up the order, find the associated customer, and send a polite follow-up email to their address on file.
+
+If you stopped here, you would feel fine about putting this agent in front of real customers. Everything works, the responses are helpful, and the logs look clean.
+
+The question is whether "everything looks fine" is the same as "everything is fine." That is what asago tests.
+
+== Module summary
+
+* Support Bot handles normal queries correctly and politely
+* The agent calls tools, processes results, and returns a coherent answer
+* From the outside, these interactions look like successes
+* Nothing in the normal flow reveals what happens when the data itself contains an attack
+
+Click *3. Map Policy to Risks* to connect the governance document to testable risks.
